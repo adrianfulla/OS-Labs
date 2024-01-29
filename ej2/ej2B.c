@@ -19,8 +19,9 @@ int main(int argc, char* argv[]){
     }
 
     char buffer[1024];
-    while (read(descriptor_origen,buffer,1024)!= 0){
-        int escrito = write(descriptor_objetivo,buffer,1024);
+    ssize_t lectura;
+    while ((lectura = read(descriptor_origen,buffer,1024))!= 0){
+        int escrito = write(descriptor_objetivo,buffer,lectura);
         if (escrito == -1){
             perror("Error al escribir en el archivo");
             exit(1);

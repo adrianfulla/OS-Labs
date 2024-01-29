@@ -67,7 +67,8 @@ Cada ejecución del programa <code>ej1A</code> crea un nuevo proceso al cual el 
 
 <details><summary>Ejercicio 2</summary>
     <ul>
-    <li><details> <summary>A</summary>
+
+<li><details> <summary>A</summary>
     Investigue acerca de las llamadas a sistema open(), close(), read()y write(). Agregue a su documento una breve explicación de su investigación
 <ul>
     <li><details><summary><code>open()</code></summary>
@@ -114,15 +115,62 @@ Cada ejecución del programa <code>ej1A</code> crea un nuevo proceso al cual el 
         </ul>
     </li>    
 </ul>
-</details></li>
-    <li><details> <summary>B</summary>
 
+</details></li>
+    <li><details><summary>B</summary>
+    La ejecución del comando en Terminal: <br /><code>./ej2 test.txt newtest.txt</code> <br />
+    Resulta en la creacion del archivo newtest.txt en el cual fue colocada la información del
+    archivo test.txt, el cual contiene la frase: <i>Hello World</i>. Además se incluyen en el
+    nuevo archivo algunos metadatos del archivo original.
+    
 </details></li>
     <li><details> <summary>C</summary>
-
+    La ejecución del comando <br /><code>sudo apt-get install strace</code><br />
+    Resulta en un mensaje de retorno que ya ha sido instalado. Supongo que el kernel 
+    Linux que utilizo, <em>Linux Mint Xfce 21.3</em> ya incluye este paquete de utilidad o 
+    fue instalado en algún comando realizado anteriormente.
 </details></li>
     <li><details> <summary>D</summary>
-
+    <img src="ej2/strace.png" alt="Captura de pantalla de strace"> <br />
+    <ul>
+        <li>Observe el resultado desplegado. ¿Por qué la primera llamada que aparece es execve?
+            <details><summary>R/</summary>
+            La función execve es la función que ejecuta un programa al cual se le es referido por un
+            nombre de ruta. Esta función especificamente hace que el programa que se este ejecutando 
+            sea reemplazado con el nuevo programa e instancias nuevas de datos necesarios para la 
+            ejecución.
+            </details>
+        </li>
+        <li>Ubique las llamadas de sistema realizadas por usted. ¿Qué significan los resultados (números que están luego del signo ‘=’)?
+            <details><summary>R/</summary>
+            Los resultados identificados por el símbolo ‘=’ en las llamadas al sistema que realiza mi
+            programa responden al retorno de cada llamada. Los resultados obtenidos por las llamadas
+            al sistema que yo hice son las siguientes:
+            <ol>
+                <li><code>open("test.txt", O_RDONLY)</code> tiene de resultado un 3, correspondiente al descriptor de archivo del archivo <i>test.txt</i></li>
+                <li><code>open("newtest.txt", O_WRONLY |O_CREAT|O_TRUNC, 0666)</code> tiene de resultado un 4, correspondiente al descriptor de archivo del archivo recien creado o truncado <i>newtest.txt</i></li>
+                <li><code>read(3,"Hello World/n", 1024)</code></li> tiene el resultado de un 12, esto significa que fueron leidos un total de 12 bytes del archivo <i>test.txt</i>.</li>
+                <li><code>write(4,"Hello World\n\", 12)</code></li> tiene el resultado de un 12, esto significa que fueron escritos un total de 12 bytes en el archivo <i>newtest.txt</i>.</li>
+                <li><code>read(3, "", 1024)</code> tiene de resultado un 0, esto indica que terminó de ser leído el archivo.</li>
+                <li><code>close(3)</code> termina el descriptor de archivo 3 correspondiente a <i>test.txt</i></li>
+                <li><code>close(4)</code> termina el descriptor de archivo 4 correspondiente a <i>newtest.txt</i></li>
+            </details>
+        </li>
+        <li>¿Por qué entre las llamadas realizadas por usted hay un read vacío?
+            <details><summary>R/</summary>
+            Esto se debe al funcionamiento del llamado a sistema <code>read()</code>, este se dio ya que despues del primer <code>read()</code> fueron leídos todos los bytes del archivo <i>test.txt</i> y el puntero fue movido por uno despues del fin de la lectura anterior, entonces al realizar el segundo <code>read()</code> ya se encontraba al final del archivo.
+            </details>
+        </li>
+        <li>Identifique tres servicios distintos provistos por el sistema operativo en este strace. Liste y explique brevemente las llamadas a sistema que corresponden a los servicios identificados (puede incluir read, write, open o close que el sistema haga por usted, no los que usted haya producido directamente con su programa)
+            <details><summary>R/</summary>
+            <ul>
+                <li><code>mmap</code>: Este servicio crea un nuevo mapeo en el espacio de dirección virtual del proceso.</li>
+                <li><code>rseq</code>: Este servicio, tambien llamado <b>Restartable sequence</b> es utilizado por Linux para ejecutar codigo del nivel de usuario realizar operacions en datos del cpu</li>
+                <li><code>prlimit</code>: Este servicio intenta obtener y/o modificar los limites de un proceso dado su PID.</li>
+            </ul>
+            </details>
+        </li>
+    </ul>
 </details></li>
 
 </ul></details>
