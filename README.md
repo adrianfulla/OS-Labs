@@ -31,38 +31,32 @@ profundizar e investigar sobre el lenguaje puesto que lo seguiremos usando duran
 
 <details><summary>R/ </summary>
     
-    Cada ejecución del programa ej1A crea un nuevo proceso al cual el Sistema Operativo le asigna un PID único. 
+Cada ejecución del programa <code>ej1A</code> crea un nuevo proceso al cual el Sistema Operativo le asigna un <i>PID</i> único. 
 </details>        
 </li>
     <li>
     Proceda a compilar el segundo programa y ejecútelo una vez. ¿Por qué aparecen dos números distintos a pesar de que estamos ejecutando un único programa?
 
 <details><summary>R/ </summary>
-
     Al ejecutar el segundo programa se obtienen un total de tres números, en mi caso el primero y el tercero son el mismo número mientras que el segundo es distinto. 
-
-    Esto se debe al uso de la función fork() la cual crea un proceso hijo el cual ejecuta de manera concurrente la instrucción siguiente al llamado de la función.
-
-    Dado esto, podemos entender que uno de los números es el PID del proceso padre y el otro número es el PID del proceso hijo.
+    Esto se debe al uso de la función <code>fork()</code> la cual crea un proceso hijo el cual ejecuta de manera concurrente la instrucción siguiente al llamado de la función.
+    Dado esto, podemos entender que uno de los números es el <i>PID</i> del proceso padre y el otro número es el <i>PID</i> del proceso hijo.
     
 </details></li>
     <li>¿Por qué el primer y el segundo números son iguales?
 
 <details><summary>R/ </summary>
-    
     En mi caso, el primer y el tercer número son iguales y el segundo es distinto.
     Este comportamiento se debe a la ejecución concurrente del proceso padre y el proceso hijo.
-
-    El primer número mostrado por la función printf del else muestra el PID del proceso padre.
-
-    El segundo número mostrado por la función printf ejecutada bajo la función execl es ejecutada dentro del proceso hijo por lo que tiene un PID con un número mayor al del proceso padre.
-
-    Por último, el tercer número mostrado es el retorno al proceso padre para que dentro de este se ejecute el execl que nos muestra el primer PID.
+    <br />El primer número mostrado por la función printf del else muestra el <i>PID</i> del proceso padre.
+    <br />El segundo número mostrado por la función printf ejecutada bajo la función execl es ejecutada 
+    dentro del proceso hijo por lo que tiene un <i>PID</i> con un número mayor al del proceso padre.
+    <br />Por último, el tercer número mostrado es el retorno al proceso padre para que dentro de este 
+    se ejecute el execl que nos muestra el primer <i>PID</i>.
 </details></li>
     <li>En la terminal, ejecute el comando top (que despliega el top de procesos en cuanto a consumo de CPU) y note cuál es el primer proceso en la lista (con identificador 1). ¿Para qué sirve este proceso?
 <details><summary>R/ </summary>
-
-    El proceso con el PID 1 corresponde al proceso systemd, este proceso el el encargado de manejar el sistema y los servicios de Linux. Sus funciones incluyen las de manejar los procesos del usuario y el bootstrap del espacio de usuario.
+    El proceso con el <i>PID</i> 1 corresponde al proceso <code>systemd</code>, este proceso el el encargado de manejar el sistema y los servicios de Linux. Sus funciones incluyen las de manejar los procesos del usuario y el bootstrap del espacio de usuario.
 </details></li>
     </ul>
     </details>
