@@ -172,22 +172,70 @@ Cada ejecución del programa <code>ej1A</code> crea un nuevo proceso al cual el 
 <details><summary>Ejercicio 3</summary>
     <ul>
         <li><details> <summary>A</summary>
+        Fue copiado el código fuente del OS al directorio home.
+        <img src="ej3/ej3A.png" alt="Captura de Maquina Virtual, Ej 3 A"> <br />
         </details></li>
         <li><details> <summary>B</summary>
+        -todo
         </details></li>
         <li><details> <summary>C</summary>
+        Se agrego la línea <code>#define __NR_mycall    345</code> al archivo <i>unistd_32.h</i> ademas se modifico la línea inferior.
+        <img src="ej3/ej3C.png" alt="Captura de Maquina Virtual, Ej 3 C"> <br />
         </details></li>
         <li><details> <summary>D</summary>
+        Se agrego la línea <code>asmlinkage long sys_mycall(int i);</code> al archivo <i>syscalls.h</i>
+        <img src="ej3/ej3D.png" alt="Captura de Maquina Virtual, Ej 3 C"> <br />
         </details></li>
         <li><details> <summary>E</summary>
-        </details></li>
+        Se crearon los archivos <i>mycall.c</i> y <i>Makefile<i> en el directorio <em>mycall</em>
+        <img src="ej3/ej3E.png" alt="Captura de Maquina Virtual, Ej 3 E"> <br />
+        El archivos <i>mycall.c</i> contiene el siguiente código:
+        
+        #include <linux/linkage.h>
+
+        asmlinkage long sys_mycall(int i){
+            return i+27;
+        }
+        
+</details></li>
         <li><details> <summary>F</summary>
-        </details></li>
-        <li><details> <summary>E</summary>
+        Se modifico el archivos <i>Makefile</i> del directorio principal del código fuente.
+        <img src="ej3/ej3F.png" alt="Captura de Maquina Virtual, Ej 3 F"> <br /> 
         </details></li>
         <li><details> <summary>G</summary>
+        Se pueden observar las 4 opciones de kernels que se pueden ejecutar. La <code>2.6.39.4</code> es la versión que creamos mediante los pasos anteriores.
+        <img src="ej3/ej3G.png" alt="Captura de Maquina Virtual, Ej 3 G"> <br /> 
         </details></li>
         <li><details> <summary>H</summary>
+        Se creo el archivo ej3H.c el cual contiene el siguiente código:
+
+        #include <stdio.h>
+        #include <sys/syscall.h>
+
+        int main()
+        {
+            int x = syscall(345, 15);
+            printf("%d\n", x);
+            return 0;
+        }
+Este programa fue compilado usando la función <code>gcc -o </code> y luego ejecutado obteniendo como resultado el número 42. Este corresponde a la sumatoria del número	entero 15 definido en el código anterior y el número entero definido en la función <code>mycall.c</code> 27. 15+27=42. <br />Además se puede confirmar que la función fue creada correctamente mediante el retorno que nos muestra el comando <code>cat /proc/kallsyms | grep mycall</code>.
+        <img src="ej3/ej3H.png" alt="Captura de Maquina Virtual, Ej 3 H"> <br />
+        <ul>
+            <li>¿Qué ha modificado aquí, la interfaz de llamadas de sistema o el API? Justifique su respuesta 
+                <details><summary>R/</summary>
+                En este caso lo que fue modificado fue la interfaz de llamadas de sistema ya que se definio el programa <i>mycall</i> como una nueva llamada que fue agregada a la tabla de llamadas del sistema. Además concorde a la documentación de <i>The kernel development community</i>, la función que creamos y todos los cambios realizados al OS son los necesarios para adicionar un llamado de sistema a la interfaz de llamadas de sistema.
+                </details>
+            </li>
+            <li>¿Por qué usamos el número de nuestra llamada de sistema en lugar de su nombre?</li>
+                <details><summary>R/</summary>
+                Se utiliza el número de la llamada de sistema que creamos ya que este es el identificador único utilizado por el kernel para enrutar la solicitud del espacio de usuario a la función del OS. 
+                <br />Además se realiza por medio del número para ser más eficiente y prevenir errores de syntax o errores ortográficos que pueden corromper el funcionamiento del kernel.
+                </details>
+            <li>¿Por qué las llamadas de sistema existentes como read o fork se pueden llamar por nombre?</li>
+                <details><summary>R/</summary>
+                Estas llamadas forman parte de la API del kernel por lo que ya se establecio la convención para llamarlas mediante el uso del nombre. Es posible adicionar nuestro llamado al sistema a la API de manera que tambien pueda ser ejecutada unicamente por el nombre en vez de usar la función <code>syscall()</code>. La manera recomendada por <i>The kernel development community</i> de manejar llamados a sistemas como el nuestro es de la manera que lo hicimos, unicamente recomiendan la adición de un llamado de sistema al API cuando este involucra procesos complejos, con multiples parámetros de variante tipo y son llamados de sistema que son utilizados por otros procesos para realizar sus funciones. 
+                </details>
+        </ul> 
         </details></li>
     </ul>
 </details>
