@@ -3,12 +3,12 @@
 
 int main(){
 	int f = fork();
-    if (f == 0){
+    if(f == 0){
         execl("./ej1A","/", (char*)NULL);
     }
     else{
         printf("%d\n", (int)getpid());
         execl("./ej1A","/", (char*)NULL);
-    };
+    }
 	return(0);
 }
