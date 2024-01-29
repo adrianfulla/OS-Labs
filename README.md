@@ -9,21 +9,21 @@ profundizar e investigar sobre el lenguaje puesto que lo seguiremos usando duran
 
 - ### Ejercicio 1
     <details> <summary>A</summary>
-         Al ejecutar el programa compilado: `ej1A` se obtiene lo siguiente:
-        `
+         Al ejecutar el programa compilado:   <code>ej1A</code>  se obtiene lo siguiente:
+        
         Hello World!
         31522
-        `
+        
     </details>
     <details> <summary>B</summary>
-       El ejecutar el programa compilado: `ej1B` se obtiene lo siguiente:
-        `
+       El ejecutar el programa compilado: <code>ej1B</code> se obtiene lo siguiente:
+        
         31524
         Hello World!
         31525
         Hello World!
         31524
-        `
+        
     </details>
     <details> <summary>C</summary>
     </details>
