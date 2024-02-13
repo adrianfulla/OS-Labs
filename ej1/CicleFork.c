@@ -8,4 +8,5 @@ int main()
         pid_t pid = fork();
         printf("fork %d %d\n", i,pid);
     }
+    return 0;
 }

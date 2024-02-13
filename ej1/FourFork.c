@@ -13,4 +13,5 @@ int main()
     printf("fork 3 %d\n", pid3);
     printf("fork 4 %d\n", pid4);
 
+    return 0;
 }
