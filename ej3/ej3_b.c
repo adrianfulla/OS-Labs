@@ -14,15 +14,15 @@ int main()
         if (pid2 == 0){
             pid3 = fork();
             if (pid3 == 0){
-                for (int i = 0; i < 1000000000; i++) {printf("%d\n", i);}
+                for (int i = 0; i < 1000000; i++) {printf("%d\n", i);}
             }
             else{
-                for (int i = 0; i < 1000000000; i++) {printf("%d\n", i);}
+                for (int i = 0; i < 1000000; i++) {printf("%d\n", i);}
                 wait(NULL);
             }
         }
         else{
-            for (int i = 0; i < 1000000000; i++) {printf("%d\n", i);}
+            for (int i = 0; i < 1000000; i++) {printf("%d\n", i);}
                 wait(NULL);
         }
     }

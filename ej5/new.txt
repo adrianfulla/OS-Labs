@@ -1,0 +1,10 @@
+Hola, soy a con el numero 3
+a: Se ha creado una nueva memoria compartida 3
+a: Inicializacion de memoria compartida
+a: Ptr creado sin valor 0x7ff1f395b000
+a: La memoria compartida contiene: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Hola, soy b con el numero 3
+b: Se ha creado una nueva memoria compartida 3
+b: Inicializacion de memoria compartida
+b: Ptr creado sin valor 0x7fc01ac35000
+b: La memoria compartida contiene: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
