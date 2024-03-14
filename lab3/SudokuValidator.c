@@ -15,32 +15,41 @@ char sudoku[9][9];
 
 bool filas_validas = false;
 bool columnas_validas = false;
+bool grupos_validas = false;
 
-bool revisarFilas() {
+void *revisarFilas(void *arg) {
+    omp_set_nested(true);
+    long thread_id = syscall(SYS_gettid);
+    printf("El thread que ejecuta el metodo para ejecutar el metodo de revision de filas es: %ld\n", thread_id);
+    omp_set_num_threads(9);
+    #pragma omp parallel for //schedule(dynamic)
     for (int i = 0; i < 9; i++) {
+        long thread_id = syscall(SYS_gettid);
+        printf("En la revision de filas el siguiente es un thread en  ejecucion: %ld\n", thread_id);
         bool nums[10] = {false};
+        #pragma omp parallel for //schedule(dynamic)
         for (int j = 0; j < 9; j++) {
             if (sudoku[i][j] < '1' || sudoku[i][j] > '9') {
                 printf("\nError: La fila contiene caracteres no válidos.\n");
-                return false;
+                pthread_exit(NULL);
             }
             int num = sudoku[i][j] - '0';
             if (nums[num]) {
                 printf("\nError: La fila no cumple con las reglas del Sudoku.\n");
-                return false;
+                pthread_exit(NULL);
             }
             nums[num] = true;
         }
     }
     filas_validas = true;
-    return true;
+    pthread_exit(NULL);
 }
 
 void *revisarColumnas(void *arg) {
     omp_set_nested(true);
     long thread_id = syscall(SYS_gettid);
     printf("El thread que ejecuta el metodo para ejecutar el metodo de revision de columnas es: %ld\n", thread_id);
-    omp_set_num_threads(81);
+    omp_set_num_threads(9);
     #pragma omp parallel for //schedule(dynamic)
     for (int i = 0; i < 9; i++) {
         long thread_id = syscall(SYS_gettid);
@@ -63,6 +72,42 @@ void *revisarColumnas(void *arg) {
     columnas_validas = true;
     pthread_exit(NULL);
 }
+
+void *revisarGrupos(void *arg) {
+    omp_set_nested(true);
+    long thread_id = syscall(SYS_gettid);
+    printf("El thread que ejecuta el metodo para ejecutar el metodo de revision de grupos es: %ld\n", thread_id);
+    omp_set_num_threads(9);
+    #pragma omp parallel for //schedule(dynamic)
+    for (int i = 0; i < 9; i += 3) {
+        for (int j = 0; j < 9; j += 3) {
+            long thread_id = syscall(SYS_gettid);
+            printf("En la revision de grupos el siguiente es un thread en  ejecucion: %ld\n", thread_id);
+            bool nums[10] = {false};
+            #pragma omp parallel for //schedule(dynamic)
+            for (int k = i; k < i + 3; k++) {
+                #pragma omp parallel for //schedule(dynamic)
+                for (int l = j; l < j + 3; l++) {
+                    printf("%c", sudoku[k][l]); // Ahora accediendo correctamente con índices bidimensionales
+                    if (sudoku[k][l] < '1' || sudoku[k][l] > '9') { // Comparando caracteres correctamente
+                        printf("\nError: El grupo contiene caracteres no válidos.\n");
+                        pthread_exit(NULL);
+                    }
+                    int num = sudoku[k][l] - '0'; // Tratando sudoku[k][l] como un carácter
+                    if (nums[num]) {
+                        printf("\nError: El grupo no cumple con las reglas del Sudoku.\n");
+                        pthread_exit(NULL);
+                    }
+                    nums[num] = true;
+                }
+            }
+        }
+    }
+    grupos_validas = true;
+    pthread_exit(NULL);
+}
+
+
 
 int main() {
     omp_set_num_threads(1);
@@ -97,6 +142,16 @@ int main() {
         perror("Error al crear el hilo de revisar columnas");
         return 1;
     }
+    pthread_t filas_thread;
+    if (pthread_create(&filas_thread, NULL, revisarFilas, NULL)) {
+        perror("Error al crear el hilo de revisar filas");
+        return 1;
+    }
+    pthread_t grupos_thread;
+    if (pthread_create(&grupos_thread, NULL, revisarGrupos, NULL)) {
+        perror("Error al crear el hilo de revisar grupos");
+        return 1;
+    }
 
     pid_t pid = fork();
     if (pid == -1) {
@@ -116,16 +171,20 @@ int main() {
         perror("Error al esperar el hilo de revisar columnas");
         return 1;
     }
+    if (pthread_join(filas_thread, NULL)) {
+        perror("Error al esperar el hilo de revisar filas");
+        return 1;
+    }
+    if (pthread_join(grupos_thread, NULL)) {
+        perror("Error al esperar el hilo de revisar grupos");
+        return 1;
+    }
 
     long thread_id = syscall(SYS_gettid);
     printf("El thread que ejecuta main es: %ld\n", thread_id);
     
-    if (!revisarFilas()) {
-        perror("Error al revisar filas");
-        return 1;
-    }
-    
-    if (filas_validas && columnas_validas) {
+
+    if (filas_validas && columnas_validas && grupos_validas) {
         printf("\nLa solución al Sudoku es válida.\n");
     } else {
         printf("\nEl Sudoku no tiene una solución válida.\n");
